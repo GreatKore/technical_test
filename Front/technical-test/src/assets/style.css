@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@700&display=swap');
+
+body {
+    background-color: white !important;
+}
+
+.linkcss-back {
+    color: rgb(0, 37, 90);
+    /* font-family: 'Tourney', cursive !important; */
+    /* font-family: 'Basic Sans' !important;  */
+}
+
+.TitleInvite {
+    color: rgb(0, 37, 90);
+    /* font-family: 'Tourney', cursive !important; */
+    /* font-family: 'Basic Sans' !important;  */
+    font-weight: bolder !important;
+}
+
+.btn-agregar {
+    color: white !important;
+    background-color: #469489 !important;
+    font-size: smaller !important;
+}
+
+.containerInvite {
+    padding: 7px;
+}
+
+.btn-editar {
+    color: white !important;
+    background-color: #469489 !important;
+    font-size: smaller !important;
+}
+
+.btn-eliminar {
+    color: white !important;
+    background-color: #b10202 !important;
+    font-size: smaller !important;
+}
+
+.btn-cancelar {
+    color: white !important;
+    background-color: #b10202 !important;
+    font-size: smaller !important;
+}
+
+.btn-aceptar {
+    color: white !important;
+    background-color: aqua !important;
+    font-size: smaller !important;
+}
+
+.movil {
+    display: none !important;
+}
+
+@media (max-width: 672px) {
+    .web {
+        display: none !important;
+    }
+
+    .movil {
+        display: block !important;
+    }
+}
+
+.contenedor_file--input {
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer
+}
