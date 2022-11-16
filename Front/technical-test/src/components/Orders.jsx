@@ -140,19 +140,19 @@ export const Orders = () => {
 
 
     const deleteOrder = async () => {
-        const url = `http://localhost:4000/api/v1/order/${orderSelected.idOrder} `;
+        const url = `http://localhost:4000/api/v1/order/${orderSelected?.idOrder} `;
         const result = await axios.delete(url);
     }
 
 
 
 
-    const eliminar = () => {
-        debugger;
+    const onDeleteAction = () => {
         setOrder(order.filter(item => item.idOrder !== orderSelected.id));
         setModalDelete(false);
         deleteOrder();
         setOrderSelected();
+        getOrder();
         <Link to='/'/>
     }
 
@@ -176,7 +176,7 @@ export const Orders = () => {
 
     useEffect(() => {
         getOrder();
-    }, [order])
+    }, [])
 
     return (
         <>
@@ -339,7 +339,7 @@ export const Orders = () => {
                             <Grid container spacing={1} justifyContent="center">
                                 <Grid container spacing={1} mt={2}>
                                     <Grid item xs={6}>
-                                        <Button fullWidth variant="contained" onClick={()=>eliminar()}>Si</Button>
+                                        <Button fullWidth variant="contained" onClick={()=>onDeleteAction()}>Si</Button>
                                     </Grid>
                                     <Grid item xs={6}>
                                         <Button fullWidth className="btn-cancelar" onClick={() => setModalDelete(false)}>NO</Button>

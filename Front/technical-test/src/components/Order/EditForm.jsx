@@ -13,12 +13,11 @@ import Checkbox from '@mui/material/Checkbox';
 
 
 export const EditForm = (props) => {
-
-
+    console.log(props)
     const order = props.ord;
     const products = props.prod;
 
-
+    const [oneOrder, setOrder] = useState();
 
     const [checked, setChecked] = React.useState([0]);
 
@@ -35,6 +34,11 @@ export const EditForm = (props) => {
         setChecked(newChecked);
     };
 
+    useEffect(() => {
+        setOrder(props.ord);
+    }, [props.ord])
+    
+
 
     return (
         <FormControl
@@ -44,7 +48,7 @@ export const EditForm = (props) => {
             }}>
 
             {
-                order?.map(item => {
+                oneOrder?.map(item => {
                     return (
                         <>
                             <Grid

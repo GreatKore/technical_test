@@ -111,55 +111,13 @@ export const Products = () => {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
-    const [modalEliminar, setModalEliminar] = useState(false);
+    const [deleteModal, setModalDelete] = useState(false);
+    const [modalEdit, setModalEdit] = useState(false);
 
     const [product, setProduct] = useState([]);
     const [search, setSearch] = useState("");
 
-
-    const getProduct = async () => {
-        const url = 'http://localhost:4000/api/v1/product';
-        const result = await axios.get(url);
-        setProduct(result.data);
-    }
-   
-
-    useEffect(() => {
-        getProduct();
-    }, [product])
-
-
-    const [invitadoSeleccionado, setInvitadoSeleccionado] = useState({
-        
-    });
-
-    const onDelete = (elemento, caso) => {
-        setInvitadoSeleccionado(elemento);
-        switch (caso) {
-            case 'Editar':
-                break;
-            case 'Eliminar':
-                setModalEliminar(true)
-                break;
-        }
-    }
-
-    const handleChange = e => {
-        const { name, value } = e.target;
-        setInvitadoSeleccionado((prevState) => ({
-            ...prevState,
-            [name]: value
-        }));
-    }
-
-
-
-
-    const eliminar = () => {
-        setProduct(product.filter(invitado => invitado.id !== invitadoSeleccionado.id));
-        setModalEliminar(false);
-    }
-
+    const [productSelect, setProductSelect] = useState();
 
     const emptyRows =
         page > 0 ? Math.max(0, (1 + page) * rowsPerPage - product.length) : 0;
@@ -172,6 +130,97 @@ export const Products = () => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     };
+
+    const handleChange = e => {
+        const { name, value } = e.target;
+        setProductSelect((prevState) => ({
+            ...prevState,
+            [name]: value
+        }));
+    }
+
+
+    const getProduct = async () => {
+        const url = 'http://localhost:4000/api/v1/product';
+        const result = await axios.get(url);
+        setProduct(result.data);
+    }
+
+
+    const deleteProduct = async () => {
+        const url = `http://localhost:4000/api/v1/product/${productSelect?.idProduct} `;
+        const result = await axios.delete(url);
+    }
+
+    const updateProduct = async () => {
+        const url = `http://localhost:4000/api/v1/product`;
+        const result = await axios.post(url, productSelect).then(function (response) {
+            console.log(response);
+        })
+            .catch(function (error) {
+                console.log(error);
+            });
+        return result;
+    }
+
+
+    const onAction = (obj, caso) => {
+        setProductSelect(obj);
+        switch (caso) {
+            case 'Edit':
+                setModalEdit(true);
+                break;
+            case 'Delete':
+                setModalDelete(true)
+                break;
+        }
+    }
+
+
+    const onEdit = () => {
+        const req = updateProduct();
+        req && req != null ? setModalEdit(false) : alert("Error");
+        setProductSelect();
+        getProduct();
+    }
+
+
+    const onDeleteAction = () => {
+        setProduct(product.filter(item => item.idProduct !== productSelect.idProduct));
+        setModalDelete(false);
+        deleteProduct();
+        setProductSelect();
+        getProduct();
+    }
+
+
+    const clearModal = (cond) => {
+
+        switch (cond) {
+            case 'Edit':
+                setProductSelect();
+                setModalEdit(false);
+                getProduct();
+                break;
+            case 'Delete':
+                setProductSelect();
+                setModalDelete(false)
+                break;
+        }
+    }
+
+
+    useEffect(() => {
+        deleteProduct();
+    }, [])
+
+    useEffect(() => {
+        updateProduct();
+    }, [])
+
+    useEffect(() => {
+        getProduct();
+    }, [])
 
 
     return (
@@ -209,8 +258,8 @@ export const Products = () => {
                                 <Grid item xs={4} md={3}>
                                     {/* <Button fullWidth className="btn-agregar" ></Button> */}
                                     <Grid display="flex" justifyContent={"flex-end"}>
-                                        <Link style={{textDecoration: 'none'}} to='/add-product/:id'>
-                                            <IconButton  sx={{ marginLeft: '5px' }}>
+                                        <Link style={{ textDecoration: 'none' }} to='/add-product'>
+                                            <IconButton sx={{ marginLeft: '5px' }}>
                                                 <Button variant="contained">Add Product</Button>
                                             </IconButton>
                                         </Link>
@@ -262,14 +311,12 @@ export const Products = () => {
                                                 <TableCell>
                                                     <Grid container spacing={1}>
                                                         <Grid item xs={4}>
-                                                            <IconButton>
-                                                                <Link to={`/add-product/${item.idProduct}`}>
-                                                                    <EditIcon style={{ color: "#469489 " }} />
-                                                                </Link>
+                                                            <IconButton onClick={() => onAction(item, 'Edit')}>
+                                                                <EditIcon style={{ color: "#469489 " }} />
                                                             </IconButton>
                                                         </Grid>
                                                         <Grid item xs={4}>
-                                                            <IconButton onClick={() => onDelete(item, 'Eliminar')}>
+                                                            <IconButton onClick={() => onAction(item, 'Delete')}>
                                                                 <DeleteIcon style={{ color: "#b10202" }} />
                                                             </IconButton>
                                                         </Grid>
@@ -301,7 +348,7 @@ export const Products = () => {
                                             onPageChange={handleChangePage}
                                             onRowsPerPageChange={handleChangeRowsPerPage}
                                             ActionsComponent={TablePaginationActions}
-                                            sx={{width:'50%'}}
+                                            sx={{ width: '50%' }}
                                         />
                                     </TableRow>
                                 </TableFooter>
@@ -312,13 +359,11 @@ export const Products = () => {
 
             </Grid>
 
-            
-
             {/*MODAL ELIMINAR*/}
             <Modal
-                open={modalEliminar}
+                open={modalEdit}
                 onClose={() => {
-                    setModalEliminar(true)
+                    setModalEdit(true)
                 }}
             >
                 <Box sx={style}>
@@ -330,15 +375,109 @@ export const Products = () => {
                                 id="transition-modal-title"
                                 sx={{ color: "#000", fontWeight: "bold" }}
                             >
-                                Estás Seguro que deseas eliminar al Doctor {invitadoSeleccionado && invitadoSeleccionado.nombre}
+                                Edit Product
+                            </Typography>
+                            <Grid container spacing={1} mt={2} justifyContent="center">
+                                <Grid item xs={12}>
+                                    <TextField
+                                        size="small"
+                                        label="Id Product"
+                                        readOnly
+                                        type="text"
+                                        name="idProduct"
+                                        fullWidth
+                                        value={productSelect && productSelect.idProduct}
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12}>
+                                    <TextField
+                                        size="small"
+                                        label="Name"
+                                        type="text"
+                                        name="name"
+                                        fullWidth
+                                        value={productSelect && productSelect.name}
+                                        onChange={handleChange}
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12}>
+                                    <TextField
+                                        size="small"
+                                        label="Unit Price"
+                                        type="text"
+                                        fullWidth
+                                        name="unit_price"
+                                        value={productSelect && productSelect.unit_price}
+                                        onChange={handleChange}
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12}>
+                                    <TextField
+                                        size="small"
+                                        label="Stock"
+                                        type="text"
+                                        fullWidth
+                                        name="qty"
+                                        value={productSelect && productSelect.qty}
+                                        onChange={handleChange}
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12}>
+                                    <TextField
+                                        size="small"
+                                        label="Total Price"
+                                        type="text"
+                                        fullWidth
+                                        name="total_price"
+                                        value={productSelect && productSelect.unit_price * productSelect.qty}
+                                        onChange={handleChange}
+                                    />
+                                </Grid>
+                                <Grid container spacing={1} mt={2}>
+                                    <Grid item xs={6}>
+                                        <Button fullWidth variant="contained" onClick={() => onEdit()}>Update</Button>
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        <Button fullWidth className="btn-cancelar" onClick={() => clearModal('Edit')}>Cancel</Button>
+                                    </Grid>
+
+                                </Grid>
+                            </Grid>
+                        </form>
+                    </div>
+                </Box>
+            </Modal>
+
+
+            {/*MODAL ELIMINAR*/}
+            <Modal
+                open={deleteModal}
+                onClose={() => {
+                    setModalDelete(true)
+                }}
+            >
+                <Box sx={style}>
+                    <div >
+                        <form>
+                            <Typography
+                                textAlign="center"
+                                variant="h6"
+                                id="transition-modal-title"
+                                sx={{ color: "#000", fontWeight: "bold" }}
+                            >
+                                Estás Seguro que deseas eliminar al Doctor {productSelect && productSelect.name}
                             </Typography>
                             <Grid container spacing={1} justifyContent="center">
                                 <Grid container spacing={1} mt={2}>
                                     <Grid item xs={6}>
-                                        <Button fullWidth variant="contained" onClick={() => eliminar()}>Si</Button>
+                                        <Button fullWidth variant="contained" onClick={() => onDeleteAction()}>Si</Button>
                                     </Grid>
                                     <Grid item xs={6}>
-                                        <Button fullWidth className="btn-cancelar" onClick={() => setModalEliminar(false)}>NO</Button>
+                                        <Button fullWidth className="btn-cancelar" onClick={() => clearModal('Delete')}>NO</Button>
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -347,7 +486,7 @@ export const Products = () => {
                 </Box>
             </Modal>
 
-            
+
         </>
     )
 }

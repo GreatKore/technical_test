@@ -29,7 +29,7 @@ export const NavHeader = () => {
                     justifyContent="flex-end"
                     alignItems="center">
 
-                    <Button component={Link} to={'/Products'} sx={{textDecoration: 'none', color:'black'}}>Products</Button>
+                    <Button component={Link} to={'/product'} sx={{textDecoration: 'none', color:'black'}}>Products</Button>
                     <Button component={Link} to={'/my-orders'} sx={{textDecoration: 'none', color:'black'}}>Orders</Button>
 
                 </Grid>
