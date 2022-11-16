@@ -106,8 +106,8 @@ TablePaginationActions.propTypes = {
 
 export const Orders = () => {
 
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
 
     const [modalDelete, setModalDelete] = useState(false);
 

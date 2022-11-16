@@ -13,7 +13,7 @@ import Checkbox from '@mui/material/Checkbox';
 
 
 export const EditForm = (props) => {
-    console.log(props)
+
     const order = props.ord;
     const products = props.prod;
 

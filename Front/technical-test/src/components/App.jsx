@@ -14,7 +14,7 @@ export const App = () => {
             <Routes>
                 <Route path='/' element={<NavHeader/>} >
                     <Route path='/product' element={<Products/>}></Route>
-                    <Route path='/add-product' element={<InsertProduct/>}></Route>
+                    <Route path='/add-product/:count' element={<InsertProduct/>}></Route>
 
                     <Route path='/my-orders' element={<Orders/>}></Route>
                     <Route path='/add-order/:id' element={<ValidateId/>}></Route>

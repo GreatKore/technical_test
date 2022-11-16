@@ -258,7 +258,7 @@ export const Products = () => {
                                 <Grid item xs={4} md={3}>
                                     {/* <Button fullWidth className="btn-agregar" ></Button> */}
                                     <Grid display="flex" justifyContent={"flex-end"}>
-                                        <Link style={{ textDecoration: 'none' }} to='/add-product'>
+                                        <Link style={{ textDecoration: 'none' }} to={`/add-product/${product.length}`}>
                                             <IconButton sx={{ marginLeft: '5px' }}>
                                                 <Button variant="contained">Add Product</Button>
                                             </IconButton>
