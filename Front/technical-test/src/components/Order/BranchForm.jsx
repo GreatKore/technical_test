@@ -34,6 +34,8 @@ export const BranchForm = (props) => {
 
     useEffect(() => {
         getOneOrder();
+    }, [])
+    useEffect(() => {
         getProducts();
     }, [])
 

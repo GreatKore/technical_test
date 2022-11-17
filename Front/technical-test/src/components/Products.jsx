@@ -152,9 +152,9 @@ export const Products = () => {
         const result = await axios.delete(url);
     }
 
-    const updateProduct = async () => {
+    const updateProduct = async (data) => {
         const url = `http://localhost:4000/api/v1/product`;
-        const result = await axios.post(url, productSelect).then(function (response) {
+        const result = await axios.post(url, data).then(function (response) {
             console.log(response);
         })
             .catch(function (error) {
@@ -177,15 +177,23 @@ export const Products = () => {
     }
 
 
+
     const onEdit = () => {
-        const req = updateProduct();
+
+        const data = {
+            ...productSelect,
+            total_price: productSelect.unit_price * productSelect.qty
+        };
+        const req = updateProduct(data);
         req && req != null ? setModalEdit(false) : alert("Error");
         setProductSelect();
         getProduct();
     }
 
 
-    const onDeleteAction = () => {
+
+    const onDeleteAction = (e) => {
+        e.preventDefault();
         setProduct(product.filter(item => item.idProduct !== productSelect.idProduct));
         setModalDelete(false);
         deleteProduct();
@@ -474,7 +482,7 @@ export const Products = () => {
                             <Grid container spacing={1} justifyContent="center">
                                 <Grid container spacing={1} mt={2}>
                                     <Grid item xs={6}>
-                                        <Button fullWidth variant="contained" onClick={() => onDeleteAction()}>Si</Button>
+                                        <Button fullWidth variant="contained" onClick={onDeleteAction}>Si</Button>
                                     </Grid>
                                     <Grid item xs={6}>
                                         <Button fullWidth className="btn-cancelar" onClick={() => clearModal('Delete')}>NO</Button>

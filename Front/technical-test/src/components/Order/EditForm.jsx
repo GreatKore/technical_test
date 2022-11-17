@@ -14,10 +14,9 @@ import Checkbox from '@mui/material/Checkbox';
 
 export const EditForm = (props) => {
 
-    const order = props.ord;
-    const products = props.prod;
 
     const [oneOrder, setOrder] = useState();
+    const [allProduct, setAllProduct] = useState();
 
     const [checked, setChecked] = React.useState([0]);
 
@@ -37,6 +36,10 @@ export const EditForm = (props) => {
     useEffect(() => {
         setOrder(props.ord);
     }, [props.ord])
+
+    useEffect(() => {
+        setAllProduct(props.prod);
+    }, [props.prod])
     
 
 
@@ -93,7 +96,7 @@ export const EditForm = (props) => {
 
                             <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
 
-                                {products?.map((value) => {
+                                {allProduct?.map((value) => {
                                     const labelId = `checkbox-list-label-${value.idProduct}`;
 
                                     return (

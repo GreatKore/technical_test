@@ -1,13 +1,15 @@
 
 
-import { Button, FormControl, Grid, TextField, Typography } from '@mui/material';
+import { alertClasses, Button, FormControl, Grid, TextField, Typography } from '@mui/material';
+import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate  } from 'react-router-dom';
 
 
 export const InsertProduct = () => {
 
   const count = useParams();
+  const history = useNavigate();
   const id = parseInt(count.count);
 
   const [data, setData] = useState({
@@ -26,17 +28,35 @@ export const InsertProduct = () => {
       ...prevState,
       [name]: value,
     }));
-  }
-
-  const onTest = () => {
-
     setProduct({
       ...data,
       idProduct: id + 1,
       total_price: data.unit_price * data.qty
     });
   }
-  console.log(product);
+
+
+  const saveProduct = async (dataSend) => {
+    const url = `http://localhost:4000/api/v1/product`;
+    const result = await axios.post(url, dataSend).then(function (response) {
+      console.log(response);
+    })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
+
+  const onSave = (e) => {
+    
+    console.log(product);
+    saveProduct(product);
+    history("/product");
+  }
+
+  useEffect(() => {
+    saveProduct();
+  }, [])
 
   return (
     <FormControl>
@@ -101,9 +121,12 @@ export const InsertProduct = () => {
 
         <br />
 
-        <Button variant='contained' onClick={onTest}
-          sx={{ ml: '40%' }}>Add Product</Button>
-        <Link style={{textDecoration: 'none'}} to={'/product'}>
+
+          <Button variant='contained' onClick={onSave}
+            sx={{ ml: '40%' }}>Add Product</Button>
+
+
+        <Link style={{ textDecoration: 'none' }} to={'/product'}>
           <Button variant='outlined'
             sx={{ ml: '10px' }}>Back</Button>
         </Link>
